@@ -1,52 +1,53 @@
-# Definición de la imagen base con Python
+# Imagen base con Python 3.10
 image: python:3.10
 
-# Definición de las etapas del pipeline
+# Definición de etapas del pipeline
 stages:
   - install
   - test_and_metrics
   - report
 
-# Job: Instalación de Dependencias
+#  Instalación de dependencias
 install_dependencies:
   stage: install
   script:
     - echo "Instalando dependencias..."
     - pip install pytest pytest-cov
+  artifacts:
+    paths:
+      - .venv/
+    expire_in: 1 week
 
-# Job: Ejecución de Tests y Medición de Cobertura
+# Ejecución de tests y métricas de cobertura
 run_tests_metrics:
   stage: test_and_metrics
   needs: ["install_dependencies"]
   script:
     - echo "Ejecutando tests y generando métricas..."
-    # Ejecuta tests y genera el reporte de cobertura en formato Cobertura XML para GitLab
-    - pytest --cov src.calculator --cov-report xml:coverage.xml
-    # Ejecuta tests con reporte de cobertura en terminal (como en el lab)
-    - pytest --cov src.calculator --cov-report term-missing
-    
-  # Configuración para que GitLab extraiga la métrica de cobertura de código
+    # Ejecuta pytest con reportes XML y terminal
+    - pytest --cov=src.calculator --cov-report=xml:coverage.xml --cov-report=term-missing -v
+    # Verifica que el archivo se haya generado
+    - echo "Archivos generados:"
+    - ls -l
   coverage: /TOTAL.*(\d+%)/
-  
-  # Artefactos: Se guardan para ser consumidos en jobs posteriores o para descargar
   artifacts:
     reports:
-      # Reporte de Cobertura en formato Cobertura para visualización en Merge Requests
       coverage_report:
         coverage_format: cobertura
         path: coverage.xml
+    paths:
+      - coverage.xml
+    expire_in: 1 week
 
-# Job: Generación y Subida de Reporte HTML (Opcional, similar a 'upload-artifact')
+# Generación del reporte HTML (opcional)
 generate_html_report:
   stage: report
   needs: ["run_tests_metrics"]
   script:
     - echo "Generando reporte HTML de cobertura..."
-    # Comando para generar el reporte HTML
-    - pytest --cov src.calculator --cov-report=html
-  
-  # Se sube el directorio htmlcov como un artefacto
+    - pytest --cov=src.calculator --cov-report=html
+    - echo "Reporte HTML generado correctamente."
   artifacts:
     paths:
       - htmlcov/
-    expire_in: 1 week # El artefacto se mantiene por una semana
+    expire_in: 1 week
