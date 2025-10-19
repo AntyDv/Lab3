@@ -1,32 +1,19 @@
-# Imagen base con Python 3.10
+# 📦 Imagen base con Python 3.10
 image: python:3.10
 
-# Definición de etapas del pipeline
+# 🔄 Definición de etapas del pipeline
 stages:
-  - install
   - test_and_metrics
   - report
 
-#  Instalación de dependencias
-install_dependencies:
-  stage: install
+# 🧪 1️⃣ Ejecución de tests y métricas de cobertura
+run_tests_metrics:
+  stage: test_and_metrics
   script:
     - echo "Instalando dependencias..."
     - pip install pytest pytest-cov
-  artifacts:
-    paths:
-      - .venv/
-    expire_in: 1 week
-
-# Ejecución de tests y métricas de cobertura
-run_tests_metrics:
-  stage: test_and_metrics
-  needs: ["install_dependencies"]
-  script:
     - echo "Ejecutando tests y generando métricas..."
-    # Ejecuta pytest con reportes XML y terminal
     - pytest --cov=src.calculator --cov-report=xml:coverage.xml --cov-report=term-missing -v
-    # Verifica que el archivo se haya generado
     - echo "Archivos generados:"
     - ls -l
   coverage: /TOTAL.*(\d+%)/
@@ -39,11 +26,12 @@ run_tests_metrics:
       - coverage.xml
     expire_in: 1 week
 
-# Generación del reporte HTML (opcional)
+# 🌐 2️⃣ Generación del reporte HTML (opcional)
 generate_html_report:
   stage: report
   needs: ["run_tests_metrics"]
   script:
+    - pip install pytest pytest-cov
     - echo "Generando reporte HTML de cobertura..."
     - pytest --cov=src.calculator --cov-report=html
     - echo "Reporte HTML generado correctamente."
