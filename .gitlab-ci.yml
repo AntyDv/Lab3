@@ -1,0 +1,31 @@
+stages:
+  - test
+  - report
+
+variables:
+  PYTHON_VERSION: "3.10"
+
+test_job:
+  stage: test
+  image: python:$PYTHON_VERSION
+  script:
+    - pip install pytest pytest-cov
+    - pytest coverage/tests/ --cov=src --cov-report=term --cov-report=xml --cov-report=html
+  artifacts:
+    paths:
+      - coverage/htmlcov/
+      - coverage.xml
+    expire_in: 1 week
+
+report_job:
+  stage: report
+  image: python:$PYTHON_VERSION
+  dependencies:
+    - test_job
+  script:
+    - echo "Generando reporte de cobertura..."
+  artifacts:
+    when: always
+    paths:
+      - coverage/htmlcov/
+    expire_in: 1 week
