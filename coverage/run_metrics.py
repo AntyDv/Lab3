@@ -2,6 +2,7 @@ import subprocess
 import time
 import json
 import re
+import sys
 from datetime import datetime
 from pathlib import Path
 
@@ -33,7 +34,8 @@ class MetricsRunner:
 
         result = subprocess.run(
             [
-                'pytest',
+                sys.executable,
+                '-m','pytest',
                 'tests/',  # Tu carpeta de tests
                 '--cov=src',
                 '--cov-report=term-missing',  # Mostrar líneas faltantes

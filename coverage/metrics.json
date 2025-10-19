@@ -1,0 +1,23 @@
+{
+  "timestamp": "2025-10-19T12:52:54.542760",
+  "build_time": {
+    "total_seconds": 0.585,
+    "test_execution_seconds": 0.574
+  },
+  "coverage": {
+    "percent_covered": 93.33,
+    "lines_covered": 14,
+    "lines_total": 15,
+    "lines_missing": 1,
+    "branches_covered": 0,
+    "branches_total": 0
+  },
+  "test_results": {
+    "total_tests": 6,
+    "passed": 6,
+    "failed": 0,
+    "duration_seconds": 0.574,
+    "status": "PASSED",
+    "avg_test_seconds": 0.096
+  }
+}
