@@ -1,12 +1,12 @@
-# 📦 Imagen base con Python 3.10
+# Imagen base con Python 3.10
 image: python:3.10
 
-# 🔄 Definición de etapas del pipeline
+# Definición de etapas del pipeline
 stages:
   - test_and_metrics
   - report
 
-# 🧪 1️⃣ Ejecución de tests y métricas de cobertura
+# Ejecución de tests y métricas de cobertura
 run_tests_metrics:
   stage: test_and_metrics
   script:
@@ -26,7 +26,7 @@ run_tests_metrics:
       - coverage.xml
     expire_in: 1 week
 
-# 🌐 2️⃣ Generación del reporte HTML (opcional)
+# Generación del reporte HTML (opcional)
 generate_html_report:
   stage: report
   needs: ["run_tests_metrics"]
